@@ -68,11 +68,11 @@
 					
 				</div>
 	
-				<sro-window :visible="true" title="Advertisement Window" :height="310" :width="600" @hide="shopWindow=false">
+				<sro-window :visible="shopWindow" title="Advertisement Window" :height="310" :width="600" @hide="shopWindow=false">
 					<el-row :gutter="5">
 						<el-col >
 							<sro-tabs>
-								<sro-tab-pane name="store1" label="Cap 140" style="padding-top: 5px;text-align: center;">
+								<sro-tab-pane name="store1" label="Vanguard" style="padding-top: 5px;text-align: center;">
 									<div v-for="(item, index) in videoList" style="height: 330;width: 600;float:left;" :style="getSlotBg(index,150,150)">
 										<div style="background-color: #540000; color: #fff; text-align: center; padding: 10px; font-size: 24px;">
 											{{ item.title }}
@@ -102,19 +102,20 @@
 		var app = new Vue({
 			el: '#all',
 			data: {
+				shopWindow: true,
 				gameing: true,
 				videoList: [
 							{
 								title: "Van-Guard.Online | Best filter was ever made!",
 								videoLink: "https://www.youtube.com/embed/T9-jFLax8ak",
-								website: "https://www.elitepvpers.com/forum/sro-pserver-guides-releases/"
+								website: "www.van-guard.online"
 							},
-							{
-								title: "Marcus Online | Cap 90 | Soon! | Grand Opening ",
-								videoLink: "https://www.youtube.com/embed/bm1tj0yaOa0",
-								website: "www.testlar.com"
+							//{
+							//	title: "Marcus Online | Cap 90 | Soon! | Grand Opening ",
+							//	videoLink: "https://www.youtube.com/embed/bm1tj0yaOa0",
+							//	website: "www.testlar.com"
 
-							},
+							//},
 							// Add more items as needed
 						]
 			},
