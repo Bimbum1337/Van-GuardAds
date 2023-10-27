@@ -1,0 +1,484 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Estart</title>
+		<link type="text/css" rel="stylesheet" href="style.css">
+		<link type="text/css" rel="stylesheet" href="animate.css">
+
+		<link type="text/css" rel="stylesheet" href="sframe.css">
+		<link type="text/css" rel="stylesheet" href="mframe.css">
+		<link type="text/css" rel="stylesheet" href="msgbox.css">
+		<script src="./axios.min.js"></script>
+		<script src="./vue.js"></script>
+		<script src="./app.js"></script>
+		<script src="./component.js"></script>
+		<script src="./msgbox.js"></script>
+
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="./element/index.css">
+		<!-- 引入组件库 -->
+		<script src="./element/index.js"></script>
+		<!-- 引入样式 -->
+		<!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+		<!-- 引入组件库 -->
+		<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+	</head>
+	<script>
+		function loadFile(filename, filetype) {
+
+			if (filetype == "js") {
+
+				var fileref = document.createElement('script')
+
+				fileref.setAttribute("type", "text/javascript")
+
+				fileref.setAttribute("src", filename)
+
+			} else if (filetype == "css") {
+
+				var fileref = document.createElement("link")
+
+				fileref.setAttribute("rel", "stylesheet")
+
+				fileref.setAttribute("type", "text/css")
+
+				fileref.setAttribute("href", filename)
+
+			}
+
+			if (typeof fileref != "undefined")
+
+				document.getElementsByTagName("head")[0].appendChild(fileref)
+
+		}
+
+		function removeFile(filename, filetype) {
+			var targetelement = (filetype == "js") ? "script" : (filetype == "css") ? "link" : "none"
+			var targetattr = (filetype == "js") ? "src" : (filetype == "css") ? "href" : "none"
+			var allsuspects = document.getElementsByTagName(targetelement)
+			for (var i = allsuspects.length; i >= 0; i--) {
+				if (allsuspects[i] && allsuspects[i].getAttribute(targetattr) != null && allsuspects[i].getAttribute(
+						targetattr).indexOf(filename) != -1) allsuspects[i].parentNode.removeChild(allsuspects[i])
+			}
+		}
+	</script>
+	<body>
+		<div id="preloader"></div>
+		<div id="all" style="height:100%;width:100%;position: relative;">
+			<template v-if="gameing">
+				<div style="position: absolute;right: 0;top:40%;background-color: rgba(0, 0, 0, 0.05);">
+					<div v-drag-y @click="showMenu=!showMenu" style="float: left;">
+						<div class="zk" :class="{showMenu:showMenu,hideMenu:!showMenu}"></div>
+					</div>
+					<transition name="slide-fade">
+						<div v-if="showMenu" style="float: right;padding: 10px;background-color: rgba(193, 193, 193, 0.5);color: #FFFFFF;width: 100px;">
+							<button class="btn-primary" style="margin-top: 5px;" @click="openAuction">拍卖行</button>
+							<button class="btn-primary" style="margin-top: 5px;">发红包</button>
+							<button class="btn-primary" style="margin-top: 5px;" @click="titleWindow=true">称号管理</button>
+							<button class="btn-primary" style="margin-top: 5px;" @click="warehouseWindow=true">随身仓库</button>
+							<button class="btn-primary" style="margin-top: 5px;" @click="shopWindow=true">随身商店</button>
+							<button class="btn-primary" style="margin-top: 5px;">CDK兑换</button>
+							<button class="btn-primary t" style="margin-top: 5px;">金珠充值</button>
+						</div>
+					</transition>
+				</div>
+				<!-- 称号窗口 -->
+				<sro-window :visible="titleWindow" title="称号管理" :height="210" :width="500" @hide="titleWindow=false">
+					<el-row :gutter="15" style="width: 100%;margin-left:0">
+						<el-col :span="10">
+							<sro-sframe title="我的称号(点击更换)" :height="200" :width="100" style="text-align: center;">
+								<template v-for="(item,key) in titleData.titles">
+									<div class="char-title-item" @click="previewTitle(item)">
+										<div style="width: 100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" :style="{color:item.color}">{{item.title}}</div>
+									</div>
+								</template>
+							</sro-sframe>
+						</el-col>
+
+						<el-col :span="14">
+							<sro-sframe title="购买称号" :height="200" :width="100">
+								<el-form @submit.native.prevent>
+									<div class="form-item">
+										<div style="width: 100%;">选择您想要的颜色</div>
+										<el-color-picker style="width: 100%;" v-model="titleData.buy.color"></el-color-picker>
+									</div>
+									<div class="form-item">
+										<div style="width: 100%;">输入您想购买的称号</div>
+										<input v-model="titleData.buy.title" type="text"></input>
+									</div>
+									<div style="margin-top: 5px;">
+										<button @click="previewTitle(titleData.buy)" class="btn-primary">预览称号</button>
+										<button style="float: right;" @click="previewTitle(titleData.buy)" class="btn-primary t">购买称号</button>
+									</div>
+									<div style="text-align: center;margin-top: 15px;color: #c8ccd4;">
+										<span>提示：当前购买称号价格{{titleData.config.price}}金珠</span>
+									</div>
+									<div style="text-align: center;margin-top: 5px;color: #c8ccd4;">
+										<span>提示：不填写内容将识别为转换颜色(免费)</span>
+									</div>
+								</el-form>
+
+							</sro-sframe>
+						</el-col>
+					</el-row>
+				</sro-window>
+				<!-- 红包 -->
+				<transition name="el-zoom-in-center">
+					<div v-if="redPacket!=null" :class="{redp:redPacket!=null,redOpen:redPacket.isOpen}" @click="openRed">
+						<div style="width: 100%;text-align: center;position: absolute;bottom: 20px;">
+							<div style="color: #fdc806;margin-bottom: 40px;font-weight: bold;">共{{redPacket.amount}}金珠</div>
+							<span>收到红包来自<br><span style="color: #aaffff;">{{redPacket.nickname}}</span></span>
+						</div>
+					</div>
+				</transition>
+				<!-- 拍卖行 -->
+				<sro-window :visible="auctionWindow" title="拍卖行" :height="310" :width="600" @hide="auctionWindow=false">
+					<el-row :gutter="5">
+						<el-col :span="17">
+							<sro-tabs>
+								<sro-tab-pane name="store1" label="购买" style="padding-top: 5px;text-align: center;">
+
+								</sro-tab-pane>
+								<sro-tab-pane name="store2" label="出售" style="padding-top: 5px;text-align: center;">
+
+								</sro-tab-pane>
+							</sro-tabs>
+						</el-col>
+						<el-col :span="7">
+							<sro-knapsack :knapsack='knapsack'>
+
+							</sro-knapsack>
+						</el-col>
+					</el-row>
+				</sro-window>
+
+				<!-- 远程仓库 -->
+				<sro-window :visible="warehouseWindow" title="远程仓库" :height="310" :width="600" @hide="warehouseWindow=false">
+					<el-row :gutter="5">
+						<el-col :span="17">
+							<sro-tabs>
+								<sro-tab-pane name="store1" label="云仓库" style="padding-top: 5px;text-align: center;">
+									<div v-for="index in 88" style="height: 36px;width: 36px;float:left;" :style="getSlotBg(index,88,11)">
+										<sro-item icon="icon/" :slot_key="10000+index-1" :item="warehouse[index-1]?warehouse[index-1]:false" />
+									</div>
+								</sro-tab-pane>
+							</sro-tabs>
+						</el-col>
+						<el-col :span="7">
+							<sro-knapsack :knapsack='knapsack'>
+
+							</sro-knapsack>
+						</el-col>
+					</el-row>
+				</sro-window>
+				<!-- 远程商店 -->
+				<sro-window :visible="shopWindow" title="远程商店" :height="310" :width="600" @hide="shopWindow=false">
+					<el-row :gutter="5">
+						<el-col :span="17">
+							<sro-tabs>
+								<sro-tab-pane name="store1" label="特价" style="padding-top: 5px;text-align: center;">
+									<div v-for="index in 88" style="height: 36px;width: 36px;float:left;" :style="getSlotBg(index,88,11)">
+									</div>
+								</sro-tab-pane>
+								<sro-tab-pane name="store2" label="消耗品" style="padding-top: 5px;text-align: center;">
+									<div v-for="index in 88" style="height: 36px;width: 36px;float:left;" :style="getSlotBg(index,88,11)">
+									</div>
+								</sro-tab-pane>
+								<sro-tab-pane name="store3" label="时装" style="padding-top: 5px;text-align: center;">
+									<div v-for="index in 88" style="height: 36px;width: 36px;float:left;" :style="getSlotBg(index,88,11)">
+									</div>
+								</sro-tab-pane>
+							</sro-tabs>
+						</el-col>
+						<el-col :span="7">
+							<sro-knapsack :knapsack='knapsack'>
+
+							</sro-knapsack>
+						</el-col>
+					</el-row>
+				</sro-window>
+				<!-- 对话框 -->
+				<sro-msgbox :visible="msgbox.show" :title="msgbox.title" :content="msgbox.content" :height="100" :width="180" @hide="msgbox=false">
+
+				</sro-msgbox>
+			</template>
+			<!-- 注册窗口 -->
+			<template v-if="reg">
+				<sro-window :visible="reg_window" title="账号注册" :height="360" :width="180" @hide="reg_window=false">
+					<div class="form">
+						<div class="form-item">
+							<div>账号</div>
+							<input type="text"></input>
+						</div>
+						<div class="form-item">
+							<div>密码</div>
+							<input type="text"></input>
+						</div>
+						<div class="form-item">
+							<div>确认密码</div>
+							<input type="text"></input>
+						</div>
+						<div class="form-item">
+							<div>注册邮箱</div>
+							<input type="text"></input>
+						</div>
+						<div class="form-item">
+							<div>推荐人</div>
+							<input type="text"></input>
+						</div>
+						<div class="form-item" style="text-align: center;">
+							<button class="btn-primary">确认注册</button>
+						</div>
+					</div>
+				</sro-window>
+				<button style="position: fixed;right: 10px;bottom: 10px;" class="btn-europe" @click="reg_window=true">注册账号</button>
+			</template>
+			<img style="position: fixed;z-index:9999;pointer-events:none" :style="'top: '+(my-16)+'px;left: '+(mx-16)+'px;'"
+			 v-if="curItem" :src="'http://client/'+curItem.Icon+curItem.Item.DDJ" />
+
+		</div>
+
+	</body>
+	<script>
+		var app = new Vue({
+			el: '#all',
+			data: {
+				msgbox: {
+					title: "通知",
+					content: "<h1>更换成功</h1>",
+					show: false
+				},
+				gameing: true, //判断是不是在游戏状态
+				reg: true,
+				reg_window: false,
+				showMenu: false,
+				focus: 0,
+				num: 1,
+				//称号相关信息
+				titleWindow: false,
+				titleData: {
+					config: {
+						price: 1000
+					},
+
+					titles: [{
+							color: "#aaffff",
+							title: "仍然QQ：395270128"
+						},
+						{
+							color: "#ff5500",
+							title: "大禹防御测试"
+						}
+					],
+					buy: {
+						color: "#409EFF",
+						title: ""
+					}
+				},
+				//红包相关数据
+				// redPacket: null,
+				redPacket: {
+					id: 1,
+					nickname: "仍然",
+					amount: 1000,
+					isOpen: false,
+				},
+				//拍卖行
+				auctionWindow: false,
+				//远程仓库
+				warehouseWindow: false,
+				//远程商店
+				shopWindow: false,
+				warehouse: {}, //仓库数据
+				knapsack: [], //背包数据
+
+				curItem: false,
+				my: 0,
+				mx: 0,
+				token: ""
+
+			},
+			created() {
+				Event.$on("setCurItem", (data) => {
+
+					let that = this;
+					if (this.curItem) {
+						window.mbQuery(6, JSON.stringify({
+							content: JSON.stringify({
+								cur: this.curItem,
+								item: data
+							}),
+							color: 0xFFFF00
+						}), this.onNativeResponse);
+						if (data.Slot == this.curItem.Slot) {
+							this.curItem = false;
+							return;
+						}
+						if (data.Slot < 10000 && this.curItem.Slot < 10000) {
+							window.mbQuery(7, JSON.stringify({
+								type: 2,
+								slot: this.curItem.Slot,
+								target_slot: data.Slot
+							}), this.onNativeResponse);
+							this.curItem = false;
+						} else {
+							//大于一万说明是远程仓库移动了
+							if (data.Slot >= 10000 && this.curItem.Slot >= 10000) {
+								//仓库内物品移动
+
+							} else if (data.Slot >= 10000) {
+								//背包向仓库移动
+								Axios.post(Host + '/game/warehouse/push', {
+									Slot: this.curItem.Slot,
+									TargetSlot: data.Slot,
+									ItemName: this.curItem.Item.ItemName,
+								}).then(function(response) {
+									window.mbQuery(6, JSON.stringify({
+										content: JSON.stringify(response.data),
+										color: 0xFFFF00
+									}), this.onNativeResponse);
+									Vue.set(that.warehouse, response.data.data.SlotID - 10000, response.data.data);
+									that.curItem = false;
+								})
+							} else {
+								//仓库向背包移动
+								Axios.post(Host + '/game/warehouse/pop', {
+									Slot: that.curItem.Item.SlotID,
+								}).then(function(response) {
+									Vue.set(that.warehouse, that.curItem.Item.SlotID - 10000, null);
+									that.curItem = false;
+								})
+							}
+						}
+
+					} else if (data.Item) {
+						this.curItem = data;
+					}
+				})
+				Event.$on("mouseMove", ({
+					x,
+					y
+				}) => {
+					this.my = y
+					this.mx = x
+				})
+			},
+
+			mounted() {
+				let inputs = document.getElementsByTagName("input");
+				for (let key in inputs) {
+					inputs[key].onfocus = function() {
+						window.mbQuery(0x100, "", this.onNativeResponse);
+					}
+					inputs[key].onblur = function() {
+						window.mbQuery(0x101, "", this.onNativeResponse);
+					}
+
+				}
+				this.token =
+					"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiLlpKfnprkiLCJleHAiOjE2Mzk0NzA2NDUsInN1YiI6IkRZIiwiYXVkIjoiVXNlciIsImlhdCI6IjIwMjEvMTIvNyAxNjozMDo0NSIsImRhdGEiOnsiaWQiOjIxfX0.Efyl9pvvdXUeQ7_LKqH8y2QjuY6oWj7UYOeerM_-Y_s"
+				Axios.defaults.headers.common['X-CSRF-TOKEN'] = this.token;
+
+			},
+
+			methods: {
+				getSlotBg(index, max = 32, num = 4) {
+					if (index == max) {
+						return 'background: url(http://client/interface/ifcommon/lattice_window/com_lattice_right_down.ddj)  no-repeat;'
+					}
+					if (index > (max - num)) {
+						return 'background: url(http://client/interface/ifcommon/lattice_window/com_lattice_left_down.ddj)  no-repeat;'
+					}
+
+					if (index % num) {
+						return 'background: url(http://client/interface/ifcommon/lattice_window/com_lattice_left_up.ddj)  no-repeat;'
+					} else {
+						return 'background: url(http://client/interface/ifcommon/lattice_window/com_lattice_right_up.ddj)  no-repeat;'
+					}
+				},
+				setToken(token) {
+					this.token = token
+					Axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+				},
+				setKnapsack(slot, item) {
+					if (!item) {
+						Vue.set(this.knapsack, slot, JSON.parse(item));
+					} else {
+						Vue.set(this.knapsack, slot, null);
+					}
+				},
+				moveKnapsack(slot, target_slot) {
+					let temp = this.knapsack[target_slot];
+					Vue.set(this.knapsack, target_slot, this.knapsack[slot]);
+					Vue.set(this.knapsack, slot, temp);
+
+					window.mbQuery(5, slot + " to " + target_slot, this.onNativeResponse);
+				},
+				updateKnapsack(slot) {
+					let that = this;
+					window.mbQuery(0x7, JSON.stringify({
+						type: 1,
+						slot: slot
+					}), (customMsg, response) => {
+						Vue.set(that.knapsack, slot, JSON.parse(response));
+					});
+				},
+				//打开拍卖行
+				openAuction() {
+					let that = this;
+					this.auctionWindow = true;
+					window.mbQuery(0x7, JSON.stringify({
+						type: 0
+					}), (customMsg, response) => {
+						that.knapsack = JSON.parse(response)
+					});
+					that.warehouse = [];
+					Axios.post(Host + '/game/warehouse/list').then(function(response) {
+						response.data.data.forEach((item) => {
+							Vue.set(that.warehouse, item.SlotID - 10000, item);
+						})
+					})
+				},
+				//开红包
+				openRed() {
+					this.redPacket.isOpen = true;
+					window.mbQuery(5, "恭喜获得1000金珠", this.onNativeResponse);
+					setTimeout(() => {
+						this.redPacket = null
+					}, 2000)
+				},
+				onNativeResponse(customMsg, response) {
+
+				},
+				//称号相关函数
+				//预览称号
+				previewTitle(item) {
+					if (item.title.length > 0) {
+						window.mbQuery(1, item.title + " ", this.onNativeResponse);
+						window.mbQuery(5, "设置成功", this.onNativeResponse);
+						window.mbQuery(6, JSON.stringify({
+							content: "称号：" + item.title + "，设置成功",
+							color: parseInt(item.color.replace("#", ""), 16)
+						}), this.onNativeResponse);
+					}
+
+					window.mbQuery(2, parseInt(item.color.replace("#", ""), 16), this.onNativeResponse);
+					window.mbQuery(6, JSON.stringify({
+						content: "颜色：" + item.color + "，设置成功",
+						color: parseInt(item.color.replace("#", ""), 16)
+					}), this.onNativeResponse);
+					window.mbQuery(5, "设置成功", this.onNativeResponse);
+
+				},
+				reload: () => {
+					window.location.reload();
+				},
+
+
+			}
+		})
+	</script>
+
+</html>

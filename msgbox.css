@@ -1,0 +1,180 @@
+.msgbox-header:before{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 40px;
+	background:url(./image/msgbox/msgbox2_window_left_up.PNG) no-repeat;
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+	
+}
+.msgbox-header-cur{
+	display: inline-block;
+	height: 40px;
+	background:url(./image/msgbox/msgbox2_window_mid_up.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-header-cur span{
+	line-height: 35px;
+}
+.msgbox-header:after{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 40px;
+	background:url(./image/msgbox/msgbox2_window_right_up.PNG) no-repeat;
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-footer:before{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background:url(./image/msgbox/msgbox2_window_left_down.PNG) no-repeat;
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-footer-cur{
+	display: inline-block;
+	height: 16px;
+	background:url(./image/msgbox/msgbox2_window_mid_down.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-footer:after{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background:url(./image/msgbox/msgbox2_window_right_down.PNG) no-repeat;
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-content:before{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 100%;
+	background:url(./image/msgbox/msgbox2_window_left_side.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-content-cur{
+	display: inline-block;
+	height: 100%;
+	background:url(./image/bg_tile/com_bg_tile_b.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-content:after{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 100%;
+	background:url(./image/msgbox/msgbox2_window_right_side.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+
+
+
+/* ////////////////////////无标题 */
+.msgbox-a-header:before{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background:url(./image/msgbox/msgbox_window_left_up.PNG) no-repeat;
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+	
+}
+.msgbox-a-header-cur{
+	display: inline-block;
+	height: 16px;
+	background:url(./image/msgbox/msgbox_window_mid_up.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-a-header-cur span{
+	line-height: 35px;
+}
+.msgbox-a-header:after{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background:url(./image/msgbox/msgbox_window_right_up.PNG) no-repeat;
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-a-footer:before{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background:url(./image/msgbox/msgbox_window_left_down.PNG) no-repeat;
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-a-footer-cur{
+	display: inline-block;
+	height: 16px;
+	background:url(./image/msgbox/msgbox_window_mid_down.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-a-footer:after{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background:url(./image/msgbox/msgbox_window_right_down.PNG) no-repeat;
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-a-content:before{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 100%;
+	background:url(./image/msgbox/msgbox_window_left_side.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-a-content-cur{
+	display: inline-block;
+	height: 100%;
+	background:url(./image/bg_tile/com_bg_tile_b.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
+.msgbox-a-content:after{
+	content:"";
+	display: inline-block;
+	width: 16px;
+	height: 100%;
+	background:url(./image/msgbox/msgbox_window_right_side.PNG);
+	background-position :right center;
+	user-select:none;
+	-webkit-user-select:none; 
+}
